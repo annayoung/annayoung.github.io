@@ -74,13 +74,14 @@
     function main() {
       var loader = new cdb.geo.ui.TilesLoader({ template: function(){ return '<div class="loader"></div>' } });
         var map = new L.Map('map', { 
-          zoomControl: true,
+          zoomControl: false,
           legend:true,
           center: [40, -98],
           zoom: 3.8,
-          scrollWheelZoom: true,
-          searchControl: true
+          scrollWheelZoom: false,
+          searchControl: false
         });
+        new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
         // create our layers
         cartodb.createLayer(map, {
           user_name: 'briannaloo',

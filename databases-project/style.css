@@ -1,3 +1,11 @@
+body {
+	background-color: #F0F0F0;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	color: #808080;
+	font-size: 12px;
+	text-align: center;
+}
+
 .population-ranking {
 	float: left;
 	margin-right: 20px;
@@ -16,4 +24,26 @@
 .update_button {
 	float: left;
 	clear: right;
+}
+
+input[type="radio"] {
+	display: none;
+}
+
+input[type="radio"] + label {
+    color: white;
+    cursor: pointer;
+}
+
+input[type="radio"] + label span {
+	display:inline-block;
+    width:25px;
+    height:25px;
+    margin:0px -22px 0 0;
+    vertical-align:middle;
+    cursor: pointer;
+}
+
+input[type="radio"]:checked + label span {
+	border: 3px solid black;
 }
