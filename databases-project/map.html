@@ -86,9 +86,9 @@
           user_name: 'briannaloo',
           type: 'cartodb',
           sublayers: [{
-            sql: "SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, county_shapes.name, cnty_fips, state_name, State, County, state_fips, population2014, glyphosate.county_fips_code, glyphosate.state_fips_code, kg, rent.median_cash_rent, rent.state, rent.area_name FROM county_shapes, county_size, glyphosate, rent",
+            sql: "SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, county_shapes.name, cnty_fips, state_name, county_size.State, county_size.County, state_fips, population2014, glyphosate.county_fips_code, glyphosate.state_fips_code, kg, rent.median_cash_rent, rent.state_string, rent.area_name, pollution.county_code, pollution.state_code, pollution.average, pollution.pollutant, pollution.max_value FROM county_shapes, county_size, glyphosate, rent, pollution",
             cartocss: $('#coloring').html().format('total_score'),
-            interactivity: "cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent"
+            interactivity: "cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, average, max_value"
             }]
         }).done(function(layer) {
           function addLoader(layer) {
@@ -101,10 +101,10 @@
           sublayer_county = layer.getSubLayer(0);
           sublayer_county.setInteraction(true);
           sublayer_county.setSQL(
-            "SELECT cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, pesticide_score, population_score, rent_score, \
-              (pesticide_score + population_score + rent_score)/3 as total_score \
+            "SELECT cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, average, max_value, pesticide_score, population_score, rent_score, pm_score_avg, pm_score_max, \
+              (pesticide_score + population_score + rent_score + (pm_score_avg + pm_score_max)/2)/4 as total_score \
               FROM \
-            (SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, \
+            (SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, average, max_value, \
             CASE \
               WHEN kg <= 10 THEN 10 \
               WHEN kg <= 50 and kg > 10 THEN 9 \
@@ -140,14 +140,41 @@
               WHEN median_cash_rent <= 1600 and median_cash_rent > 1400 THEN 3 \
               WHEN median_cash_rent <= 1800 and median_cash_rent > 1600 THEN 2 \
               WHEN median_cash_rent <= 2001 and median_cash_rent > 1800 THEN 1 \
-            END as rent_score \
-            FROM county_shapes, county_size, glyphosate, rent \
+            END as rent_score, \
+            CASE \
+              WHEN average <= 4 THEN 10 \
+              WHEN average <= 6 THEN 9 \
+              WHEN average <= 8 THEN 8 \
+              WHEN average <= 10 THEN 7 \
+              WHEN average <= 12 THEN 6 \
+              WHEN average <= 14 THEN 5 \
+              WHEN average <= 16 THEN 4 \
+              WHEN average <= 19 THEN 3 \
+              WHEN average <= 22 THEN 2 \
+              WHEN average <= 25 THEN 1 \
+            END as pm_score_avg, \
+            CASE \
+              WHEN max_value <= 10 THEN 10 \
+              WHEN max_value <= 35 THEN 9 \
+              WHEN max_value <= 50 THEN 8 \
+              WHEN max_value <= 60 THEN 7 \
+              WHEN max_value <= 80 THEN 6 \
+              WHEN max_value <= 100 THEN 5 \
+              WHEN max_value <= 120 THEN 4 \
+              WHEN max_value <= 140 THEN 3 \
+              WHEN max_value <= 160 THEN 2 \
+              WHEN max_value <= 180 THEN 1 \
+            END as pm_score_max \
+            FROM county_shapes, county_size, glyphosate, rent, pollution \
             WHERE county_shapes.state_name=county_size.State \
             AND CONCAT(county_shapes.name,' County')=county_size.County \
             AND glyphosate.state_fips_code=county_shapes.state_fips \
             AND glyphosate.county_fips_code=county_shapes.cnty_fips \
-            AND rent.state=county_shapes.state_name \
-            AND rent.area_name=county_shapes.name ) as r \
+            AND rent.state_stirng=county_shapes.state_name \
+            AND CONCAT(rent.area_name,' County')=county_shapes.name \
+            AND pollution.pollutant='PM2.5 - Local Conditions' \
+            AND pollution.county_code=county_shapes.cnty_fips \
+            AND pollution.state_code=county_shapes.state_fips) as r \
             ");
           
     });
