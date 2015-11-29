@@ -72,9 +72,9 @@
         })();
     function main() {
 
-      var pesticide_rank = 10;
-      var population_rank = 10;
-      var rent_rank = 10;
+      var population_rank = window.parent.document.querySelector('input[name="population"]:checked').value;
+      var pesticide_rank = window.parent.document.querySelector('input[name="pesticides"]:checked').value;
+      var rent_rank = window.parent.document.querySelector('input[name="median_rent"]:checked').value;
 
       var loader = new cdb.geo.ui.TilesLoader({ template: function(){ return '<div class="loader"></div>' } });
 
