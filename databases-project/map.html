@@ -160,16 +160,16 @@
           map.addLayer(layer);
           sublayer_county = layer.getSubLayer(0);
           sublayer_county.setInteraction(true);
-          updateMap(sublayer_county)
+          updateMap(sublayer_county);
 
 
           // update preferences         
-          $('.update_button', window.parent.document).click(function() {
+          $('.button', window.parent.document).click(function() {
             population_rank = window.parent.document.querySelector('input[name="population"]:checked').value;
-            //pesticide_rank = document.querySelector('parent.input[name="pesticides"]:checked').value;
-            //rent_rank = document.querySelector('parent.input[name="median_rent"]:checked').value;
-          
-            updateMap(sublayer_county)
+            pesticide_rank = window.parent.document.querySelector('input[name="pesticides"]:checked').value;
+            rent_rank = window.parent.document.querySelector('input[name="median_rent"]:checked').value;
+
+            updateMap(sublayer_county);
           });
 
       

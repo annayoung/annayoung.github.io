@@ -6,11 +6,20 @@ body {
 	text-align: center;
 }
 
+iframe {
+	width:600px;
+	height: 400px;
+}
+
+.map_frame {
+	 position: absolute; 
+	 left: 325px; 
+}
 
 .button {
 	position: absolute;
-	left: 50%;
-	margin-left: -32.5px;
+	top: 375px;
+	left: 120px;
 	cursor: pointer;
 	width: 65px;
 	height: 25px;
@@ -19,6 +28,12 @@ body {
 	border-radius: 5px;
 	line-height: 25px;
 	font-size: 14px;
+}
+
+.rankings {
+	position: absolute;
+	left: 20px;
+	top: 125px;
 }
 
 label {
