@@ -7,11 +7,10 @@ body {
 }
 
 
-.update_button {
-	
-}
-
 .button {
+	position: absolute;
+	left: 50%;
+	margin-left: -32.5px;
 	cursor: pointer;
 	width: 65px;
 	height: 25px;
