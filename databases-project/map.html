@@ -72,19 +72,9 @@
         })();
     function main() {
 
-      // update preferences
       var pesticide_rank = 10;
       var population_rank = 10;
       var rent_rank = 10;
-
-      $('.update_button', window.parent.document).click(function() {
-        population_rank = window.parent.document.querySelector('input[name="population"]:checked').value;
-        //pesticide_rank = document.querySelector('parent.input[name="pesticides"]:checked').value;
-        //rent_rank = document.querySelector('parent.input[name="median_rent"]:checked').value;
-        console.log(population_rank);
-      });
-
-      
 
       var loader = new cdb.geo.ui.TilesLoader({ template: function(){ return '<div class="loader"></div>' } });
 
@@ -98,28 +88,10 @@
         });
         new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
 
-        // create our layers
-        cartodb.createLayer(map, {
-          user_name: 'briannaloo',
-          type: 'cartodb',
-          sublayers: [{
-            sql: "SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, county_shapes.name, cnty_fips, state_name, county_size.State, county_size.County, state_fips, population2014, glyphosate.county_fips_code, glyphosate.state_fips_code, kg, rent.median_cash_rent, rent.state_string, rent.area_name, pollution.county_code, pollution.state_code, pollution.average, pollution.pollutant, pollution.max_value FROM county_shapes, county_size, glyphosate, rent, pollution",
-            cartocss: $('#coloring').html().format('total_score'),
-            interactivity: "cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent"
-            }]
-        }).done(function(layer) {
-          function addLoader(layer) {
-            layer.bind('loading', function() { loader.show() });
-            layer.bind('load',  function() { loader.hide(); });
-          }
-          console.log("loaded data")
-          // add the layers to our map 
-          map.addLayer(layer);
-          sublayer_county = layer.getSubLayer(0);
-          sublayer_county.setInteraction(true);
-          sublayer_county.setSQL(
+        var updateMap = function(sublayer_county) {
+          var sql = 
             "SELECT cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, pesticide_score, population_score, rent_score, \
-              (pesticide_score + population_score + rent_score)/3 as total_score \
+              (pesticide_score*" + pesticide_rank + " + population_score*" + population_rank + " + rent_score*" + rent_rank + ")/(" + (Number(pesticide_rank) + Number(population_rank) + Number(rent_rank)) + ") as total_score \
               FROM \
             (SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent,  \
             CASE \
@@ -165,7 +137,43 @@
             AND glyphosate.county_fips_code=county_shapes.cnty_fips \
             AND rent.state_string=county_shapes.state_name \
             AND rent.area_name=county_shapes.name) as r \
-            ");
+            ";
+            sublayer_county.setSQL(sql);
+        };
+
+        // create our layers
+        cartodb.createLayer(map, {
+          user_name: 'briannaloo',
+          type: 'cartodb',
+          sublayers: [{
+            sql: "SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, county_shapes.name, cnty_fips, state_name, county_size.State, county_size.County, state_fips, population2014, glyphosate.county_fips_code, glyphosate.state_fips_code, kg, rent.median_cash_rent, rent.state_string, rent.area_name, pollution.county_code, pollution.state_code, pollution.average, pollution.pollutant, pollution.max_value FROM county_shapes, county_size, glyphosate, rent, pollution",
+            cartocss: $('#coloring').html().format('total_score'),
+            interactivity: "cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent"
+            }]
+        }).done(function(layer) {
+          function addLoader(layer) {
+            layer.bind('loading', function() { loader.show() });
+            layer.bind('load',  function() { loader.hide(); });
+          }
+          console.log("loaded data");
+          // add the layers to our map 
+          map.addLayer(layer);
+          sublayer_county = layer.getSubLayer(0);
+          sublayer_county.setInteraction(true);
+          updateMap(sublayer_county)
+
+
+          // update preferences         
+          $('.update_button', window.parent.document).click(function() {
+            population_rank = window.parent.document.querySelector('input[name="population"]:checked').value;
+            //pesticide_rank = document.querySelector('parent.input[name="pesticides"]:checked').value;
+            //rent_rank = document.querySelector('parent.input[name="median_rent"]:checked').value;
+          
+            updateMap(sublayer_county)
+          });
+
+      
+
           
     });
   }
