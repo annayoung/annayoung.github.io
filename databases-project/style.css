@@ -6,26 +6,9 @@ body {
 	text-align: center;
 }
 
-.population-ranking {
-	float: left;
-	margin-right: 20px;
-}
-
-.pesticides-ranking {
-    float: left;
-    margin-right: 20px;
-}
-
-.rent-ranking {
-	float: left;
-	margin-right: 40px;
-}
 
 .update_button {
-	position: absolute;
-	float: left;
-	top: 385px;
-	left: 80px;
+	
 }
 
 .button {
@@ -39,6 +22,9 @@ body {
 	font-size: 14px;
 }
 
+label {
+	margin-right: 10px;
+}
 
 input[type="radio"] {
 	display: none;
