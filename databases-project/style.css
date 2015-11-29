@@ -22,13 +22,28 @@ body {
 }
 
 .update_button {
+	position: absolute;
 	float: left;
-	clear: right;
+	top: 385px;
+	left: 80px;
 }
+
+.button {
+	cursor: pointer;
+	width: 65px;
+	height: 25px;
+	background-color: #808080;
+	color: #fff;
+	border-radius: 5px;
+	line-height: 25px;
+	font-size: 14px;
+}
+
 
 input[type="radio"] {
 	display: none;
 }
+
 
 input[type="radio"] + label {
     color: white;

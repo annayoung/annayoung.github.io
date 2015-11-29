@@ -6,7 +6,6 @@
      <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
      <link href='iframe_style.css' rel='stylesheet' type='text/css'>
      <script type="text/javascript" src="jquery.js"></script>
-     <script type="text/javascript" src="slide.js"></script>
   </head>
 
   <body>
@@ -72,7 +71,23 @@
             
         })();
     function main() {
+
+      // update preferences
+      var pesticide_rank = 10;
+      var population_rank = 10;
+      var rent_rank = 10;
+
+      $('.update_button', window.parent.document).click(function() {
+        population_rank = window.parent.document.querySelector('input[name="population"]:checked').value;
+        //pesticide_rank = document.querySelector('parent.input[name="pesticides"]:checked').value;
+        //rent_rank = document.querySelector('parent.input[name="median_rent"]:checked').value;
+        console.log(population_rank);
+      });
+
+      
+
       var loader = new cdb.geo.ui.TilesLoader({ template: function(){ return '<div class="loader"></div>' } });
+
         var map = new L.Map('map', { 
           zoomControl: false,
           legend:true,
@@ -82,6 +97,7 @@
           searchControl: false
         });
         new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
+
         // create our layers
         cartodb.createLayer(map, {
           user_name: 'briannaloo',
