@@ -60,10 +60,40 @@ input[type="radio"] + label span {
 }
 
 input[type="radio"]:checked + label span {
-	border: 3px solid black;
+	border: 2px solid black;
 }
 
 input[type="radio"]:checked + label {
 	font-weight: bold;
 	font-size: 14px;
 }
+
+.title {
+	font-size: 14px;
+}
+
+.legend_left {
+	position: absolute;
+	left: 24px;
+	font-size: 11px;
+	margin-top: 4px;
+}
+
+.legend_middle {
+	position: absolute;
+	left: 115px;
+	font-size: 11px;
+	margin-top: 4px;
+}
+
+.legend_right {
+	position: absolute;
+	left: 235px;
+	font-size: 11px;
+	margin-top: 4px;
+}
+
+form {
+	margin-top: 15px;
+}
+
