@@ -18,38 +18,39 @@
   </body>
 
    <script type="cartocss/html" id="coloring">
+   /* -54 to 27 */
     #coloring{
       polygon-fill: #FFFFB2;
       polygon-opacity: 1;
     }
-    #coloring [ {0} <= 10] {
+    #coloring [ {0} <= 27] {
        polygon-fill: #02820B;
     }
-    #coloring [ {0} <= 9] {
+    #coloring [ {0} <= 22] {
        polygon-fill: #158202;
     }
-    #coloring [ {0} <= 8] {
+    #coloring [ {0} <= 17] {
        polygon-fill: #328102;
     }
-    #coloring [ {0} <= 7] {
+    #coloring [ {0} <= 12] {
        polygon-fill: #4E8102;
     }
-    #coloring [ {0} <= 6] {
+    #coloring [ {0} <= 7] {
        polygon-fill: #6A8002;
     }
-    #coloring [ {0} <= 5] {
+    #coloring [ {0} <= 2] {
        polygon-fill: #7F7802;
     }
-    #coloring [ {0} <= 4] {
+    #coloring [ {0} <= -3] {
        polygon-fill: #7E5C02;
     }
-    #coloring [ {0} <= 3] {
+    #coloring [ {0} <= -8] {
        polygon-fill: #7E3F02;
     }
-    #coloring [ {0} <= 2] {
+    #coloring [ {0} <= -13] {
        polygon-fill: #7D2302;
     }
-    #coloring [ {0} <= 1] {
+    #coloring [ {0} <= -18] {
        polygon-fill: #7C0703;
     }
     </script>
@@ -90,9 +91,37 @@
         new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
 
         var updateMap = function(sublayer_county) {
+
+          /*var equation = "(" +
+            "(pesticide_score-" + pesticide_rank + ")* "
+            +"(CASE WHEN (pesticide_score-" + pesticide_rank + ") < 0 THEN 2 "
+            +"WHEN (pesticide_score-" + pesticide_rank + ") >= 0 THEN 1 "
+            +"END) + (population_score-" + population_rank + ")* "
+            +"(CASE WHEN (population_score-" + population_rank + ") < 0 THEN 2 "
+            +"WHEN (population_score-" + population_rank + ") >= 0 THEN 1 "
+            +"END) + (rent_score-" + rent_rank + ")* "
+            +"(CASE WHEN (rent_score-" + rent_rank + ") < 0 THEN 2 "
+            +"WHEN (rent_score-" + rent_rank + ") >= 0 THEN 1 END))";*/
+
+          var equation = "(" 
+            +"CASE WHEN " + pesticide_rank + " = 0 THEN 0 ELSE " 
+            +"((pesticide_score-" + pesticide_rank + ")* "
+            +"(CASE WHEN (pesticide_score-" + pesticide_rank + ") < 0 THEN 2 "
+            +"WHEN (pesticide_score-" + pesticide_rank + ") >= 0 THEN 1 "
+            +"END)) END + "
+            +"CASE WHEN " + population_rank + " = 0 THEN 0 ELSE " 
+            +"((population_score-" + population_rank + ")* "
+            +"(CASE WHEN (population_score-" + population_rank + ") < 0 THEN 2 "
+            +"WHEN (population_score-" + population_rank + ") >= 0 THEN 1 "
+            +"END)) END + " 
+            +"CASE WHEN " + rent_rank + " = 0 THEN 0 ELSE " 
+            + "((rent_score-" + rent_rank + ")* "
+            +"(CASE WHEN (rent_score-" + rent_rank + ") < 0 THEN 2 "
+            +"WHEN (rent_score-" + rent_rank + ") >= 0 THEN 1 END)) END)";
+
           var sql = 
             "SELECT cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, pesticide_score, population_score, rent_score, \
-              (pesticide_score*" + pesticide_rank + " + population_score*" + population_rank + " + rent_score*" + rent_rank + ")/(" + (Number(pesticide_rank) + Number(population_rank) + Number(rent_rank)) + ") as total_score \
+              (" + equation + ") as total_score \
               FROM \
             (SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent,  \
             CASE \
@@ -140,6 +169,44 @@
             AND rent.area_name=county_shapes.name) as r \
             ";
             sublayer_county.setSQL(sql);
+
+            // update color scale to be over max range
+            var min = (1 - pesticide_rank)*2*Math.min(1, pesticide_rank) + (1 - population_rank)*2*Math.min(1, population_rank) + (1 - rent_rank)*2*Math.min(1, rent_rank);
+            var max = (10 - pesticide_rank)*Math.min(1, pesticide_rank) + (10 - population_rank)*Math.min(1, population_rank) + (10 - rent_rank)*Math.min(1, rent_rank);
+            var interval = (max - min)/10;
+
+            var css = "#coloring [ total_score <= 27] { \
+               polygon-fill: #02820B; \
+            } \
+            #coloring [ total_score <= " + max + "] { \
+               polygon-fill: #158202; \
+            } \
+            #coloring [ total_score <= " + (max - interval) + "] { \
+               polygon-fill: #328102; \
+            } \
+            #coloring [ total_score <= " + (max - interval*2) + "] { \
+               polygon-fill: #4E8102; \
+            } \
+            #coloring [ total_score <= " + (max - interval*3) + "] { \
+               polygon-fill: #6A8002; \
+            } \
+            #coloring [ total_score <= " + (max - interval*4) + "] { \
+               polygon-fill: #7F7802; \
+            } \
+            #coloring [ total_score <= " + (max - interval*5) + "] { \
+               polygon-fill: #7E5C02; \
+            } \
+            #coloring [ total_score <= " + (max - interval*6) + "] { \
+               polygon-fill: #7E3F02; \
+            } \
+            #coloring [ total_score <= " + (max - interval*7) + "] { \
+               polygon-fill: #7D2302; \
+            } \
+            #coloring [ total_score <= " + (max - interval*8) + "] { \
+               polygon-fill: #7C0703; \
+            }"
+            
+            sublayer_county.setCartoCSS(css);
         };
 
         // create our layers
