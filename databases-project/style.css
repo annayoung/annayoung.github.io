@@ -1,8 +1,8 @@
 body {
-	background-color: #F0F0F0;
+	background-color: #90c8ef;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	color: #808080;
-	font-size: 12px;
+	font-size: 15px;
 	text-align: center;
 }
 
@@ -18,7 +18,7 @@ iframe {
 
 .button {
 	position: absolute;
-	top: 375px;
+	top: 425px;
 	left: 120px;
 	cursor: pointer;
 	width: 65px;
@@ -30,10 +30,17 @@ iframe {
 	font-size: 14px;
 }
 
+.intro {
+	position: absolute;
+	left: 20px;
+	top: 75px;
+	width: 300px;
+}
+
 .rankings {
 	position: absolute;
 	left: 20px;
-	top: 125px;
+	top: 175px;
 }
 
 label {
