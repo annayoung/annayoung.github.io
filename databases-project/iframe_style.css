@@ -16,3 +16,23 @@ div.leaflet-control-zoom.leaflet-bar.leaflet-control {
   box-shadow: none !important;
   border: 1px solid #ccc;
 }
+
+#tool-tip {
+  position: absolute;
+  width: auto;
+  height: auto;
+  background-color: white;
+  opacity: .9;
+  z-index: 50;
+  border-radius: 15px;
+  text-align: center;
+  color: #3E7BB6;
+  vertical-align: bottom;
+  font-size: 12px;
+  padding: 4px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#tool-tip p {
+  margin-top: 5px;
+}

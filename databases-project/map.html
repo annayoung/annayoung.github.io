@@ -11,6 +11,7 @@
   <body>
     
     <div id="map"></div>
+    <div id="tool-tip"></div>
     <div id="preferences">
     </div>
     
@@ -162,7 +163,6 @@
           sublayer_county.setInteraction(true);
           updateMap(sublayer_county);
 
-
           // update preferences         
           $('.button', window.parent.document).click(function() {
             population_rank = window.parent.document.querySelector('input[name="population"]:checked').value;
@@ -170,6 +170,26 @@
             rent_rank = window.parent.document.querySelector('input[name="median_rent"]:checked').value;
 
             updateMap(sublayer_county);
+          });
+
+          // tool tip
+          var event = function(e){
+              $('#tool-tip').css({
+                 left:  e.pageX,
+                 top:   e.pageY
+              });
+          };
+          sublayer_county.on('featureClick', function(e, pos, latlng, data) {
+            console.log("hello");
+            $('#tool-tip').html('<p>'  +data[state_name]+'<br>'+ data[name] + '&mu;g/m<sup>3</sup></p>');
+            $(document).bind('mousemove', event);
+            $('#tool-tip').show();
+            
+          });
+            sublayer_county.on('featureOut', function(e, pos, latlng, data) {
+           //Make the tooltip go away when off countries
+            $('#tool-tip').hide();
+            $(document).unbind('mousemove', event, false);
           });
 
       
