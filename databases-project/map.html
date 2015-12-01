@@ -92,17 +92,6 @@
 
         var updateMap = function(sublayer_county) {
 
-          /*var equation = "(" +
-            "(pesticide_score-" + pesticide_rank + ")* "
-            +"(CASE WHEN (pesticide_score-" + pesticide_rank + ") < 0 THEN 2 "
-            +"WHEN (pesticide_score-" + pesticide_rank + ") >= 0 THEN 1 "
-            +"END) + (population_score-" + population_rank + ")* "
-            +"(CASE WHEN (population_score-" + population_rank + ") < 0 THEN 2 "
-            +"WHEN (population_score-" + population_rank + ") >= 0 THEN 1 "
-            +"END) + (rent_score-" + rent_rank + ")* "
-            +"(CASE WHEN (rent_score-" + rent_rank + ") < 0 THEN 2 "
-            +"WHEN (rent_score-" + rent_rank + ") >= 0 THEN 1 END))";*/
-
           var equation = "(" 
             +"CASE WHEN " + pesticide_rank + " = 0 THEN 0 ELSE " 
             +"((pesticide_score-" + pesticide_rank + ")* "
@@ -134,7 +123,7 @@
               WHEN kg <= 50000 and kg > 10000 THEN 4 \
               WHEN kg <= 100000 and kg > 50000 THEN 3 \
               WHEN kg <= 350000 and kg > 100000 THEN 2 \
-              WHEN kg <= 700000 and kg > 350000 THEN 1 \
+              WHEN kg > 350000 THEN 1 \
             END as pesticide_score, \
             CASE \
               WHEN population2014 >= 2000000 THEN 10 \
@@ -207,6 +196,7 @@
             }"
             
             sublayer_county.setCartoCSS(css);
+
         };
 
         // create our layers
@@ -214,7 +204,7 @@
           user_name: 'briannaloo',
           type: 'cartodb',
           sublayers: [{
-            sql: "SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, county_shapes.name, cnty_fips, state_name, county_size.State, county_size.County, state_fips, population2014, glyphosate.county_fips_code, glyphosate.state_fips_code, kg, rent.median_cash_rent, rent.state_string, rent.area_name, pollution.county_code, pollution.state_code, pollution.average, pollution.pollutant, pollution.max_value FROM county_shapes, county_size, glyphosate, rent, pollution",
+            sql: "SELECT county_shapes.cartodb_id, county_shapes.the_geom_webmercator, county_shapes.name, cnty_fips, state_name, county_size.State, county_size.County, state_fips, population2014, glyphosate.county_fips_code, glyphosate.state_fips_code, kg, rent.median_cash_rent, rent.state_string, rent.area_name FROM county_shapes, county_size, glyphosate, rent",
             cartocss: $('#coloring').html().format('total_score'),
             interactivity: "cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent"
             }]
@@ -240,14 +230,18 @@
           });
 
           // tool tip
+          cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['name']);
+
           var event = function(e){
               $('#tool-tip').css({
                  left:  e.pageX,
                  top:   e.pageY
               });
           };
-          sublayer_county.on('featureClick', function(e, pos, latlng, data) {
-            console.log("hello");
+          sublayer_county.on('featureOver', function(e, pos, data) {
+
+            console.log("in");
+
             $('#tool-tip').html('<p>'  +data[state_name]+'<br>'+ data[name] + '&mu;g/m<sup>3</sup></p>');
             $(document).bind('mousemove', event);
             $('#tool-tip').show();
@@ -256,6 +250,7 @@
             sublayer_county.on('featureOut', function(e, pos, latlng, data) {
            //Make the tooltip go away when off countries
             $('#tool-tip').hide();
+            console.log("out")
             $(document).unbind('mousemove', event, false);
           });
 
