@@ -87,7 +87,7 @@
           center: [40, -98],
           zoom: 3.8,
           scrollWheelZoom: false,
-          searchControl: false
+          searchControl: true
         });
         new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
 
@@ -250,6 +250,9 @@
             layer.bind('loading', function() { loader.show() });
             layer.bind('load',  function() { loader.hide(); });
           }
+          var v = cdb.vis.Overlay.create('search', map.viz, {})
+          v.show();
+          $('#map').append(v.render().el);
           console.log("loaded data");
           // add the layers to our map 
           map.addLayer(layer);
