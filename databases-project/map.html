@@ -134,28 +134,28 @@
               WHEN kg > 350000 THEN 1 \
             END AS pesticide_score, \
             CASE \
-              WHEN population2014 >= 2000000 THEN 10 \
-              WHEN population2014 >= 900000 and population2014 < 2000000 THEN 9 \
-              WHEN population2014 >= 600000 and population2014 < 900000 THEN 8 \
-              WHEN population2014 >= 400000 and population2014 < 600000 THEN 7 \
-              WHEN population2014 >= 200000 and population2014 < 400000 THEN 6 \
-              WHEN population2014 >= 100000 and population2014 < 200000 THEN 5 \
-              WHEN population2014 >= 50000 and population2014 < 100000 THEN 4 \
-              WHEN population2014 >= 15000 and population2014 < 50000 THEN 3 \
-              WHEN population2014 >= 5000 and population2014 < 15000 THEN 2 \
+              WHEN population2014 >= 400000 THEN 10 \
+              WHEN population2014 >= 100000 and population2014 < 400000 THEN 9 \
+              WHEN population2014 >= 60000 and population2014 < 100000 THEN 8 \
+              WHEN population2014 >= 40000 and population2014 < 60000 THEN 7 \
+              WHEN population2014 >= 30000 and population2014 < 40000 THEN 6 \
+              WHEN population2014 >= 20000 and population2014 < 30000 THEN 5 \
+              WHEN population2014 >= 15000 and population2014 < 20000 THEN 4 \
+              WHEN population2014 >= 10000 and population2014 < 15000 THEN 3 \
+              WHEN population2014 >= 5000 and population2014 < 10000 THEN 2 \
               WHEN population2014 >= 0 and population2014 < 5000 THEN 1 \
             END AS population_score, \
             CASE \
-              WHEN median_cash_rent <= 200 THEN 10 \
-              WHEN median_cash_rent <= 400 and median_cash_rent > 200 THEN 9 \
-              WHEN median_cash_rent <= 600 and median_cash_rent > 400 THEN 8 \
-              WHEN median_cash_rent <= 800 and median_cash_rent > 600 THEN 7 \
-              WHEN median_cash_rent <= 1000 and median_cash_rent > 800 THEN 6 \
-              WHEN median_cash_rent <= 1200 and median_cash_rent > 1000 THEN 5 \
-              WHEN median_cash_rent <= 1400 and median_cash_rent > 1200 THEN 4 \
-              WHEN median_cash_rent <= 1600 and median_cash_rent > 1400 THEN 3 \
-              WHEN median_cash_rent <= 1800 and median_cash_rent > 1600 THEN 2 \
-              WHEN median_cash_rent <= 2001 and median_cash_rent > 1800 THEN 1 \
+              WHEN median_cash_rent <= 400 THEN 10 \
+              WHEN median_cash_rent <= 450 and median_cash_rent > 400 THEN 9 \
+              WHEN median_cash_rent <= 500 and median_cash_rent > 450 THEN 8 \
+              WHEN median_cash_rent <= 533 and median_cash_rent > 500 THEN 7 \
+              WHEN median_cash_rent <= 566 and median_cash_rent > 533 THEN 6 \
+              WHEN median_cash_rent <= 600 and median_cash_rent > 566 THEN 5 \
+              WHEN median_cash_rent <= 650 and median_cash_rent > 600 THEN 4 \
+              WHEN median_cash_rent <= 700 and median_cash_rent > 650 THEN 3 \
+              WHEN median_cash_rent <= 800 and median_cash_rent > 700 THEN 2 \
+              WHEN median_cash_rent <= 2001 and median_cash_rent > 800 THEN 1 \
             END AS rent_score, \
             (SELECT \
               CASE \
