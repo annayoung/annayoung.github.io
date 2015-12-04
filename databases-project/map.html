@@ -255,7 +255,6 @@
 
           // tool tip
           cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['name', 'state_name', 'powerplants_score','pesticide_score','population_score','rent_score']);
-          layer.getSubLayer(0).infowindow.set('template', $('#infowindow_template').html());
 
           var v = cdb.vis.Overlay.create('search', map.viz, {})
           v.show();
