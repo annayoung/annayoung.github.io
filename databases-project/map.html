@@ -218,6 +218,18 @@
             } \
             #coloring [ total_score <= " + (max - interval*9) + "] { \
                polygon-fill: #7C0703; \
+            } \
+            #coloring::labels \
+            [zoom>6] { \
+              text-name: [name]; \
+              text-face-name: 'DejaVu Sans Book'; \
+              text-size: 9; \
+              text-label-position-tolerance: 0; \
+              text-fill: #000; \
+              text-dy: -10; \
+              text-allow-overlap: true; \
+              text-placement: point; \
+              text-placement-type: dummy; \
             }"
             
             sublayer_county.setCartoCSS(css);
@@ -275,7 +287,7 @@
           });
             sublayer_county.on('featureOut', function(e, pos, latlng, data) {
            //Make the tooltip go away when off countries
-            $('#tool-tip').hide();
+            //$('#tool-tip').hide();
             console.log("out")
             $(document).unbind('mousemove', event, false);
           });
