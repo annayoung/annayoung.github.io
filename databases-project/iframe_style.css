@@ -14,7 +14,7 @@ html, body, #map {
 
 div.leaflet-control-zoom.leaflet-bar.leaflet-control {
   box-shadow: none !important;
-  border: 1px solid #ccc;
+  border: 1px solid #fff;
 }
 
 #tool-tip {
