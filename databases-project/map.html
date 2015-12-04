@@ -53,7 +53,9 @@
     #coloring [ {0} <= -18] {
        polygon-fill: #7C0703;
     }
+
     </script>
+
 
     <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script> 
      
@@ -83,7 +85,7 @@
 
         var map = new L.Map('map', { 
           zoomControl: false,
-          legend:true,
+          legend: true,
           center: [40, -98],
           zoom: 3.8,
           scrollWheelZoom: false,
@@ -230,7 +232,7 @@
               text-allow-overlap: true; \
               text-placement: point; \
               text-placement-type: dummy; \
-            }"
+            }";
             
             sublayer_county.setCartoCSS(css);
 
@@ -250,6 +252,11 @@
             layer.bind('loading', function() { loader.show() });
             layer.bind('load',  function() { loader.hide(); });
           }
+
+          // tool tip
+          cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['name', 'state_name', 'powerplants_score','pesticide_score','population_score','rent_score']);
+          layer.getSubLayer(0).infowindow.set('template', $('#infowindow_template').html());
+
           var v = cdb.vis.Overlay.create('search', map.viz, {})
           v.show();
           $('#map').append(v.render().el);
@@ -269,34 +276,6 @@
 
             updateMap(sublayer_county);
           });
-
-          // tool tip
-          cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['name', 'state_name', 'powerplants_score', 'pesticide_score', 'population_score', 'rent_score']);
-
-          var event = function(e){
-              $('#tool-tip').css({
-                 left:  e.pageX,
-                 top:   e.pageY
-              });
-          };
-          sublayer_county.on('featureOver', function(e, pos, data) {
-
-            console.log("in");
-
-            $('#tool-tip').html('<p>'  +data[state_name]+'<br>'+ data[name] + '&mu;g/m<sup>3</sup></p>');
-            $(document).bind('mousemove', event);
-            $('#tool-tip').show();
-            
-          });
-            sublayer_county.on('featureOut', function(e, pos, latlng, data) {
-           //Make the tooltip go away when off countries
-            //$('#tool-tip').hide();
-            console.log("out")
-            $(document).unbind('mousemove', event, false);
-          });
-
-      
-
           
     });
   }
