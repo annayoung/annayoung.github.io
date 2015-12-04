@@ -253,9 +253,6 @@
             layer.bind('load',  function() { loader.hide(); });
           }
 
-          // tool tip
-          cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['name', 'state_name', 'powerplants_score','pesticide_score','population_score','rent_score']);
-
           var v = cdb.vis.Overlay.create('search', map.viz, {})
           v.show();
           $('#map').append(v.render().el);
@@ -264,6 +261,9 @@
           map.addLayer(layer);
           sublayer_county = layer.getSubLayer(0);
           sublayer_county.setInteraction(true);
+          
+          cdb.vis.Vis.addInfowindow(map, sublayer_county, ['name', 'state_name', 'powerplants_score','pesticide_score','population_score','rent_score']);
+          
           updateMap(sublayer_county);
 
           // update preferences         
