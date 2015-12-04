@@ -1,14 +1,14 @@
 body {
 	background-color: #90c8ef;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
-	color: #808080;
+	color: #5d5d5d;
 	font-size: 15px;
 	text-align: center;
 }
 
 iframe {
 	width:600px;
-	height: 400px;
+	height:400px;
 }
 
 .map_frame {
@@ -23,7 +23,7 @@ iframe {
 	cursor: pointer;
 	width: 65px;
 	height: 25px;
-	background-color: #808080;
+	background-color: #5d5d5d;
 	color: #fff;
 	border-radius: 5px;
 	line-height: 25px;
@@ -73,6 +73,22 @@ input[type="radio"]:checked + label span {
 input[type="radio"]:checked + label {
 	font-weight: bold;
 	font-size: 14px;
+}
+
+.legend {
+	position: absolute;
+	left: 965px;
+	top: 220px;
+}
+
+.legend div {
+    width:25px;
+    height:25px;
+    margin:0px -22px 0 0;
+}
+
+.legend span {
+	font-size: 11px;
 }
 
 .title {
