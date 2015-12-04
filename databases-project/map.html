@@ -271,7 +271,7 @@
           });
 
           // tool tip
-          cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['name']);
+          cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['name', 'state_name', 'powerplants_score', 'pesticide_score', 'population_score', 'rent_score']);
 
           var event = function(e){
               $('#tool-tip').css({
