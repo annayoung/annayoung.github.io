@@ -163,11 +163,11 @@
                 WHEN count(*) > 20 THEN 2 \
                 WHEN count(*) > 13 THEN 3 \
                 WHEN count(*) > 9 THEN 4 \
-                WHEN count(*) > 7 THEN 5 \
-                WHEN count(*) > 5 THEN 6 \
-                WHEN count(*) > 3 THEN 7 \
-                WHEN count(*) > 2 THEN 8 \
-                WHEN count(*) > 1 THEN 9 \
+                WHEN count(*) >= 7 THEN 5 \
+                WHEN count(*) >= 5 THEN 6 \
+                WHEN count(*) >= 3 THEN 7 \
+                WHEN count(*) >= 2 THEN 8 \
+                WHEN count(*) >= 1 THEN 9 \
                 WHEN count(*) >= 0 THEN 10 \
               END \
               FROM powerplants2 \
