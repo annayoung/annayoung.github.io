@@ -91,7 +91,7 @@
         });
         new L.Control.Zoom({ position: 'bottomright' }).addTo(map);
 
-        var updateMap = function(sublayer_county) {
+        var updateMap = function(sublayer_county, sublayer2) {
 
           var equation = "(" 
             +"CASE WHEN " + pesticide_rank + " = 0 THEN 0 ELSE " 
@@ -116,11 +116,7 @@
             +"END)) END"
             +")";
 
-          var sql = 
-            "SELECT cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, pesticide_score, population_score, rent_score, powerplants_score, \
-              (" + equation + ") AS total_score \
-              FROM \
-            (SELECT county_shapes2.cartodb_id, county_shapes2.the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent,  \
+            var sql2 = "(SELECT county_shapes2.cartodb_id, county_shapes2.the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent,  \
             CASE \
               WHEN kg <= 10 THEN 10 \
               WHEN kg <= 50 and kg > 10 THEN 9 \
@@ -182,6 +178,12 @@
             AND rent.state_string=county_shapes2.state_name \
             AND rent.area_name=county_shapes2.name) AS r \
             ";
+
+            var sql = 
+            "SELECT cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, pesticide_score, population_score, rent_score, powerplants_score, \
+              (" + equation + ") AS total_score \
+              FROM " + sql2;
+
             sublayer_county.setSQL(sql);
 
             // update color scale to be over max range
@@ -222,6 +224,20 @@
             
             sublayer_county.setCartoCSS(css);
 
+            /*var new_sql = "SELECT state_name, name, total_score \
+            FROM (SELECT cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent, pesticide_score, population_score, rent_score, powerplants_score, \
+              (" + equation + ") AS total_score \
+              FROM " + sql2 + ") as dataset \
+              WHERE total_score=" + '10';
+              console.log(new_sql);
+             
+            sublayer2.setSQL(new_sql);
+
+            SELECT *
+FROM Persons
+WHERE ROWNUM <=5;
+*/
+
         };
 
         // create our layers
@@ -232,7 +248,11 @@
             sql: "SELECT county_shapes2.cartodb_id, county_shapes2.the_geom_webmercator, county_shapes2.name, cnty_fips, state_name, county_size.State, county_size.County, state_fips, population2014, glyphosate.county_fips_code, glyphosate.state_fips_code, kg, rent.median_cash_rent, rent.state_string, rent.area_name FROM county_shapes2, county_size, glyphosate, rent",
             cartocss: $('#coloring').html().format('total_score'),
             interactivity: "cartodb_id, the_geom_webmercator, name, state_name, population2014, kg, median_cash_rent"
-            }]
+            }/*, {
+              sql: "SELECT county_shapes2.cartodb_id, county_shapes2.the_geom_webmercator, county_shapes2.name, cnty_fips, state_name, county_size.State, county_size.County, state_fips, population2014, glyphosate.county_fips_code, glyphosate.state_fips_code, kg, rent.median_cash_rent, rent.state_string, rent.area_name FROM county_shapes2, county_size, glyphosate, rent",
+              css: "polygon-fill: #000000",
+              interactivity: "cartodb_id, the_geom_webmercator"
+            }*/]
         }).done(function(layer) {
           function addLoader(layer) {
             layer.bind('loading', function() { loader.show() });
@@ -243,7 +263,8 @@
           map.addLayer(layer);
           sublayer_county = layer.getSubLayer(0);
           sublayer_county.setInteraction(true);
-          updateMap(sublayer_county);
+          sublayer2 = layer.getSubLayer(1);
+          updateMap(sublayer_county, sublayer2);
 
           // update preferences         
           $('.button', window.parent.document).click(function() {
@@ -252,7 +273,7 @@
             rent_rank = window.parent.document.querySelector('input[name="median_rent"]:checked').value;
             powerplants_rank = window.parent.document.querySelector('input[name="powerplants"]:checked').value;
 
-            updateMap(sublayer_county);
+            updateMap(sublayer_county, sublayer2);
           });
 
           // tool tip
@@ -276,7 +297,7 @@
             sublayer_county.on('featureOut', function(e, pos, latlng, data) {
            //Make the tooltip go away when off countries
             $('#tool-tip').hide();
-            console.log("out")
+            //console.log("out")
             $(document).unbind('mousemove', event, false);
           });
 
