@@ -110,7 +110,6 @@
             + "((rent_score-" + rent_rank + ")* "
             +"(CASE WHEN (rent_score-" + rent_rank + ") < 0 THEN 2 "
             +"WHEN (rent_score-" + rent_rank + ") >= 0 THEN 1 END)) END + "
-    
             +"CASE WHEN " + powerplants_rank + " = 0 THEN 0 ELSE " 
             +"((powerplants_score-" + powerplants_rank + ")* "
             +"(CASE WHEN (powerplants_score-" + powerplants_rank + ") < 0 THEN 2 "
@@ -190,6 +189,8 @@
             var min = (1 - pesticide_rank)*2*Math.min(1, pesticide_rank) + (1 - population_rank)*2*Math.min(1, population_rank) + (1 - rent_rank)*2*Math.min(1, rent_rank) + (1 - powerplants_rank)*2*Math.min(1, powerplants_rank);
             var max = (10 - pesticide_rank)*Math.min(1, pesticide_rank) + (10 - population_rank)*Math.min(1, population_rank) + (10 - rent_rank)*Math.min(1, rent_rank) + (10 - powerplants_rank)*Math.min(1, powerplants_rank);
             var interval = (max - min)/10;
+            console.log(min);
+            console.log(max);
 
             var css = "#coloring [ total_score <= " + max + "] { \
                polygon-fill: #02820B; \
